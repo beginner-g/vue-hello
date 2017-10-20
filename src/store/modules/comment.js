@@ -1,27 +1,26 @@
 import axios from 'axios'
 const state= {
-  all:[
-    {text:'第一条评论'},
-    {text:'第二条评论'}
-  ]
+  all:[]
 }
 const mutations ={
-  'ADD_COMMENT'(state,{text}){
-    state.all.push({text})
-  },
-  'LOAD_COMMENTS'(state,{comments}){
-    this.state.all=comments
+  'ADD_COMMENT'(state,{text,postId}){
+    state.all.push({text,postId})
   }
 }
 const actions ={
-  'FETCH_COMMENTS' ({ commit }) {
-    console.log('FETCH_COMMENTS')
-    axios.get(`http://localhost:3008/comments`)
-      .then( res => {
-        console.log(res.data)
-        const comments = res.data
-        commit('LOAD_COMMENTS', { comments })
-      })
+  addComment({commit},{text,postId}){
+    axios.post('http://localhost:3008/comments',{text,postId}).then(
+      res=>{
+        commit('ADD_COMMENT',{text,postId})
+      }
+    )
+  },
+  loadComments({commit}){
+    axios.get('http://localhost:3008/comments').then(
+      res=>{
+        state.all=res.data
+      }
+    )
   }
 }
 export default {

@@ -15,11 +15,20 @@
   export default {
     name:'comment-box',
     computed:{
-      comments(){
-        return this.$store.state.comment.all
+      comments:function(){
+        const allComments = this.$store.state.comment.all
+         return allComments.filter(t =>
+           {
+             console.log(this.postId)
+             return t.postId == this.postId
+           }
+         )
       },
       reversedComments:function(){
         return this.comments.slice().reverse()
+      },
+      postId:function(){
+        return this.$route.params.id
       }
     },
     data:()=>(
@@ -32,9 +41,12 @@
         // const input =document.getElementById('comment-value')
         if(this.text!==''){
           // this.comments.push({text:this.text})
-          this.$store.commit('ADD_COMMENT',{text:this.text})
+          this.$store.dispatch({type:'addComment',text:this.text,postId:this.postId})
           this.text=''
         }
+      },
+      handleClear:function(){
+        console.log(1);
       }
     }
   }
@@ -68,5 +80,15 @@
     color: #fff;
     background-color: deeppink;
     border: 0;
+  }
+  li{
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 5px;
+  }
+  .clear{
+    background-color: lightblue;
+    color: red;
+    line-height: 20px;
   }
 </style>
